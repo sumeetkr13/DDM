@@ -60,21 +60,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_screen);
 
-		usernamesArrayList.add("sumeet");
-		usernamesArrayList.add("prasad");
-		usernamesArrayList.add("josh");
-		usernamesArrayList.add("rahul");
-		usernamesArrayList.add("sumeet1");
-		usernamesArrayList.add("prasad1");
-		usernamesArrayList.add("josh1");
-		usernamesArrayList.add("rahul1");
-		usernamesArrayList.add("p");
-
-		passwordArrayList.add("pass12");
-		passwordArrayList.add("pass@123");
-		passwordArrayList.add("p");
-
-
+		addUserCredentials();
 
 		try
 		{
@@ -92,6 +78,23 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 			e.printStackTrace();
 		}
 
+	}
+
+	private void addUserCredentials()
+	{
+		usernamesArrayList.add("sumeet");
+		usernamesArrayList.add("prasad");
+		usernamesArrayList.add("josh");
+		usernamesArrayList.add("rahul");
+		usernamesArrayList.add("sumeet1");
+		usernamesArrayList.add("prasad1");
+		usernamesArrayList.add("josh1");
+		usernamesArrayList.add("rahul1");
+		usernamesArrayList.add("p");
+
+		passwordArrayList.add("pass12");
+		passwordArrayList.add("pass@123");
+		passwordArrayList.add("p");
 	}
 
 	private void initialiseUIElements()

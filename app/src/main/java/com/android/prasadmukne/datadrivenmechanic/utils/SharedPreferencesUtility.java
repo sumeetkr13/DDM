@@ -11,7 +11,7 @@ public class SharedPreferencesUtility
 {
 	private static SharedPreferencesUtility sharedPreferencesUtility;
 	private SharedPreferences sharedPreferences;
-	private static final String SHARED_PREFERENCE_NAME="ONE_BHARAT_APP";
+	private static final String SHARED_PREFERENCE_NAME="DataDrivenApp";
 
 	private SharedPreferencesUtility(Context context)
 	{
