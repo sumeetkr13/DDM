@@ -20,6 +20,7 @@ public class SplashScreenActivity extends AppCompatActivity
 
 		try
 		{
+			
 			new Handler().postDelayed(new Runnable()
 			{
 
