@@ -45,14 +45,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 	private static final int REQUEST_PERMISSION_SETTING = 300;
 	private ArrayList<String> usernamesArrayList=new ArrayList<String>();
 	private ArrayList<String> passwordArrayList=new ArrayList<String>();
-	//private LinearLayout fingerprintButton;
-	//private Cipher cipher;
-	//private Dialog fingerPrintDialog;
-	//private static final String KEY_NAME = "private_key";
-	//private KeyStore keyStore;
-	//private LinearLayout fingerprintConfigureLinearLayout;
-	//private FingerprintHandler handler;
-	//private boolean isPasswordChanged = false;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -320,16 +313,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 		//return true;
 	}
 
-	/*@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_PERMISSION_SETTING)
-		{
-			checkAndAskPermissions();
-		}
-	}
-*/
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
 	{
