@@ -57,6 +57,9 @@ public class SharedPreferencesUtility
 		return sharedPreferences.getInt(key,0);
 	}
 
-
+	public void remove(String key)
+	{
+		sharedPreferences.edit().remove(key).commit();
+	}
 
 }

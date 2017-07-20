@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import com.android.prasadmukne.datadrivenmechanic.R;
+import com.android.prasadmukne.datadrivenmechanic.fragments.PrivacyPolicyFragment;
 import com.android.prasadmukne.datadrivenmechanic.login.LoginScreenActivity;
+import com.android.prasadmukne.datadrivenmechanic.privacy_policy.PrivacyPolicyActivity;
+import com.android.prasadmukne.datadrivenmechanic.utils.AppConstants;
+import com.android.prasadmukne.datadrivenmechanic.utils.SharedPreferencesUtility;
 
 public class SplashScreenActivity extends AppCompatActivity
 {
@@ -33,7 +37,17 @@ public class SplashScreenActivity extends AppCompatActivity
 				{
 					// This method will be executed once the timer is over
 					// Start your app main activity
-					Intent i = new Intent(SplashScreenActivity.this, LoginScreenActivity.class);
+					Intent i=null;
+					SharedPreferencesUtility sharedPreferencesUtility=SharedPreferencesUtility.getSharedPreferencesUtility(SplashScreenActivity.this);
+					if (!sharedPreferencesUtility.getBoolean(AppConstants.IS_LICENSE_AGREED))
+					{
+						i = new Intent(SplashScreenActivity.this, PrivacyPolicyActivity.class);
+					}
+					else
+					{
+						i = new Intent(SplashScreenActivity.this, LoginScreenActivity.class);
+					}
+
 					startActivity(i);
 
 					// close this activity

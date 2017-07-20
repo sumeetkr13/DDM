@@ -92,9 +92,9 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 
 	private void initialiseUIElements()
 	{
-		TextView primaryActionBarTextView = (TextView) findViewById(R.id.primaryActionBarTextView);
-		primaryActionBarTextView.setVisibility(View.VISIBLE);
-		primaryActionBarTextView.setText(getResources().getString(R.string.app_name));
+		//TextView primaryActionBarTextView = (TextView) findViewById(R.id.primaryActionBarTextView);
+		//primaryActionBarTextView.setVisibility(View.VISIBLE);
+		//primaryActionBarTextView.setText(getResources().getString(R.string.app_name));
 
 		//TextView versionNumberTextView = (TextView) findViewById(R.id.versionNumberTextView);
 		// versionNumberTextView.setText(BuildConfig.VERSION_CODE);
@@ -120,7 +120,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 	{
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		getSupportActionBar().setTitle("");
+		getSupportActionBar().setTitle(R.string.app_name);
 	}
 
 	@Override

@@ -159,9 +159,9 @@ public class BaseActivity extends AppCompatActivity
 
 	private void initialiseUIElements(Toolbar toolbar)
 	{
-		TextView primaryActionBarTextView = (TextView) findViewById(R.id.primaryActionBarTextView);
-		primaryActionBarTextView.setVisibility(View.VISIBLE);
-		primaryActionBarTextView.setText(getResources().getString(R.string.app_name));
+		//TextView primaryActionBarTextView = (TextView) findViewById(R.id.primaryActionBarTextView);
+		//primaryActionBarTextView.setVisibility(View.VISIBLE);
+		//primaryActionBarTextView.setText(getResources().getString(R.string.app_name));
 		draweristView = (ListView) findViewById(R.id.drawerListView);
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -176,7 +176,7 @@ public class BaseActivity extends AppCompatActivity
 	{
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		getSupportActionBar().setTitle("");
+		getSupportActionBar().setTitle(R.string.app_name);
 		return toolbar;
 	}
 
