@@ -25,7 +25,13 @@
         </activity>
         <activity android:name=".login.LoginScreenActivity" />
         <activity android:name=".base.BaseActivity" />
-        <activity android:name=".privacy_policy.PrivacyPolicyActivity"></activity>
+        <activity android:name=".privacy_policy.PrivacyPolicyActivity"/>
+        <receiver android:name="com.android.prasadmukne.datadrivenmechanic.commons.receivers.WifiReceiver" >
+            <intent-filter android:priority="100">
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".commons.services.ProcessedDataIntentService" />
     </application>
 
 </manifest>

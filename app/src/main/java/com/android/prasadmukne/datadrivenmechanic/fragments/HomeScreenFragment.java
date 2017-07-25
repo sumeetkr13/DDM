@@ -4,11 +4,9 @@ import android.app.Dialog;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaExtractor;
-import android.media.MediaFormat;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * Created by prasad.mukne on 7/14/2017.
@@ -45,7 +44,8 @@ public class HomeScreenFragment extends Fragment
 	private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
 	private static final String AUDIO_RECORDER_FOLDER = "DDMAudioRecorder";
 	private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.raw";
-	private static final int RECORDER_SAMPLERATE = 44100;
+	//private static final int RECORDER_SAMPLE_RATE = 44100;
+	private static final int RECORDER_SAMPLE_RATE = 8000;
 	private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
 	private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -56,6 +56,7 @@ public class HomeScreenFragment extends Fragment
 	private View view;
 	private CheckBox isSystemFaultyCheckBox;
 	private Chronometer chronometer;
+	String lastFileName="";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -82,7 +83,7 @@ public class HomeScreenFragment extends Fragment
 			setButtonHandlers();
 			enableButtons(false);
 
-			bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+			bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLE_RATE, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
 			//initialiseAndSetUI(rootView);
 			SharedPreferencesUtility sharedPreferencesUtility=SharedPreferencesUtility.getSharedPreferencesUtility(getActivity());
 			String userType=sharedPreferencesUtility.getString(AppConstants.USER_TYPE);
@@ -138,8 +139,8 @@ public class HomeScreenFragment extends Fragment
 		{
 			file.mkdirs();
 		}
-
-		return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + AUDIO_RECORDER_FILE_EXT_WAV);
+		lastFileName=(file.getAbsolutePath() + "/" + System.currentTimeMillis() + AUDIO_RECORDER_FILE_EXT_WAV);
+		return lastFileName;
 	}
 
 	private String getTempFilename()
@@ -166,7 +167,7 @@ public class HomeScreenFragment extends Fragment
 	{
 		chronometer.setBase(SystemClock.elapsedRealtime());
 		chronometer.start();
-		recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, bufferSize);
+		recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLE_RATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, bufferSize);
 
 		int i = recorder.getState();
 		if (i == 1)
@@ -243,6 +244,7 @@ public class HomeScreenFragment extends Fragment
 
 		copyWaveFile(getTempFilename(), getFilename());
 		deleteTempFile();
+		//generateTempOutputFiles();
 	}
 
 	private void deleteTempFile()
@@ -258,9 +260,9 @@ public class HomeScreenFragment extends Fragment
 		FileOutputStream out = null;
 		long totalAudioLen = 0;
 		long totalDataLen = totalAudioLen + 36;
-		long longSampleRate = RECORDER_SAMPLERATE;
+		long longSampleRate = RECORDER_SAMPLE_RATE;
 		int channels = 2;
-		long byteRate = RECORDER_BPP * RECORDER_SAMPLERATE * channels / 8;
+		long byteRate = RECORDER_BPP * RECORDER_SAMPLE_RATE * channels / 8;
 
 		byte[] data = new byte[bufferSize];
 
@@ -445,6 +447,80 @@ public class HomeScreenFragment extends Fragment
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(new Bundle());
 
+	}
+
+	public void generateTempOutputFiles()
+	{
+		try
+		{
+			String filepath = Environment.getExternalStorageDirectory().getPath();
+			File file = new File(filepath, AUDIO_RECORDER_FOLDER);
+
+			if (!file.exists())
+			{
+				file.mkdirs();
+			}
+
+			File tempFile1 = new File(filepath, "rightChannel.txt");
+
+			if (tempFile1.exists())
+			{
+				tempFile1.delete();
+			}
+
+			File tempFile2 = new File(filepath, "leftChannel.txt");
+
+			if (tempFile2.exists())
+			{
+				tempFile2.delete();
+			}
+
+
+			File leftFile = new File(file.getAbsolutePath() + "/" +"leftChannel.txt");
+
+			File rightFile = new File(file.getAbsolutePath() + "/" +"rightChannel.txt");
+
+			byte data[] = new byte[2048];
+
+			FileInputStream inputStream = new FileInputStream(lastFileName);
+
+			if (null != inputStream)
+			{
+				while (inputStream.read(data)!=-1)
+				{
+					FileOutputStream leftFileOutputStream=new FileOutputStream(leftFile,true);
+					FileOutputStream rightFileOutputStream=new FileOutputStream(rightFile,true);
+					PrintStream printStream1 = new PrintStream(leftFileOutputStream);
+					PrintStream printStream2 = new PrintStream(rightFileOutputStream);
+					/*//for(int i=0;i<data.length/2;i++)
+					for(int i=0;i<data.length-1;i=i+2)
+					{
+						//leftFileOutputStream.write(Math.abs(data[i*2]));
+						printStream1.print(","+Math.abs(data[i*2]));
+						//rightFileOutputStream.write(Math.abs(data[i*2+1]));
+						printStream2.print(","+Math.abs(data[i*2+1]));
+						//printStream1.print(","+Math.abs(data[i]));
+						//printStream2.print(","+Math.abs(data[i+1]));
+						Log.d("data ","data "+Math.abs(data[i+1]));
+					}*/
+					for(int i=0;i<data.length-3;i=i+4)
+					{
+						printStream1.print(","+Math.abs(data[i]));
+						printStream1.print(","+Math.abs(data[i+1]));
+						printStream2.print(","+Math.abs(data[i+2]));
+						printStream2.print(","+Math.abs(data[i+3]));
+						//Log.d("data ","data "+Math.abs(data[i+1]));
+					}
+					leftFileOutputStream.close();
+					rightFileOutputStream.close();
+				}
+				inputStream.close();
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }

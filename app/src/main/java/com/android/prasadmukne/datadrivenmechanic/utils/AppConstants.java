@@ -6,6 +6,9 @@ package com.android.prasadmukne.datadrivenmechanic.utils;
 
 public class AppConstants
 {
+
+    public static final String PROCESSED_DATA_SENDING_URL ="http://.:8080/DDMWebApplication/rest/upload/storeUser";
+
     public static final String MPIN = "mpin";
 
     public static String TEMP_PASSWORD = "temp_mpin";
