@@ -7,7 +7,9 @@ package com.android.prasadmukne.datadrivenmechanic.utils;
 public class AppConstants
 {
 
-    public static final String PROCESSED_DATA_SENDING_URL ="http://.:8080/DDMWebApplication/rest/upload/storeUser";
+    //public static final String PROCESSED_DATA_SENDING_URL ="http://.:8080/DDMWebApplication/rest/upload/storeUser";
+
+    public static final String PROCESSED_DATA_SENDING_URL ="http://192.168.43.249:8081/SenseiWebApplication/rest/auth/login";
 
     public static final String MPIN = "mpin";
 
@@ -22,4 +24,10 @@ public class AppConstants
     public static String EXPER_TUSER = "expert_user";
 
     public static final String IS_LICENSE_AGREED="isLicenseAgreed";
+
+    public static final String RESPONSE_DATA="data";
+
+    public static final String RESPONSE_MESSAGE="message";
+
+    public static final String RESPONSE_STATUS="status";
 }

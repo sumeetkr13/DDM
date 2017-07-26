@@ -28,6 +28,7 @@ public class AppApplication extends Application
 	public void onCreate()
 	{
 		super.onCreate();
+		mInstance = this;
 		String [] columnNames={SQLiteDatabaseManager.REQUEST,SQLiteDatabaseManager.FILE_PATH,SQLiteDatabaseManager.STATUS};
 		String[] columnDataTypes={"Text","Text","Text"};
 		SQLiteDatabaseManager.getInstance(this).createTable(SQLiteDatabaseManager.REQUEST_TABLE,columnNames,columnDataTypes);

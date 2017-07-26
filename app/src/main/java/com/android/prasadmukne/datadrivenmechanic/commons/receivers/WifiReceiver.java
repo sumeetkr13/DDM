@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import com.android.prasadmukne.datadrivenmechanic.commons.services.ProcessedDataIntentService;
 
 /**
  * Created by prasad.mukne on 7/24/2017.
@@ -22,6 +23,8 @@ public class WifiReceiver extends BroadcastReceiver
 			WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 			String ssid = wifiInfo.getSSID();
+
+			//context.startService(new Intent(context, ProcessedDataIntentService.class));
 		}
 	}
 }

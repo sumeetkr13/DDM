@@ -1,6 +1,8 @@
 package com.android.prasadmukne.datadrivenmechanic.fragments;
 
 import android.app.Dialog;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaExtractor;
@@ -24,6 +26,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import com.android.prasadmukne.datadrivenmechanic.R;
+import com.android.prasadmukne.datadrivenmechanic.commons.database.SQLiteDatabaseManager;
+import com.android.prasadmukne.datadrivenmechanic.commons.services.ProcessedDataIntentService;
 import com.android.prasadmukne.datadrivenmechanic.utils.AppConstants;
 import com.android.prasadmukne.datadrivenmechanic.utils.SharedPreferencesUtility;
 import java.io.File;
@@ -32,6 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by prasad.mukne on 7/14/2017.
@@ -245,6 +251,7 @@ public class HomeScreenFragment extends Fragment
 		copyWaveFile(getTempFilename(), getFilename());
 		deleteTempFile();
 		//generateTempOutputFiles();
+		addDataToDatabase();
 	}
 
 	private void deleteTempFile()
@@ -516,6 +523,32 @@ public class HomeScreenFragment extends Fragment
 				}
 				inputStream.close();
 			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void addDataToDatabase()
+	{
+		try
+		{
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("username","prasad");
+			jsonObject.put("password","NqiJiKA1b2N3aF5bswZiWA==");
+			jsonObject.put("macId","123");
+			jsonObject.put("imei1","456");
+			jsonObject.put("imei2","789");
+			jsonObject.put("userId","123_prasad");
+
+			ContentValues contentValues=new ContentValues();
+			contentValues.put(SQLiteDatabaseManager.REQUEST,jsonObject.toString());
+			contentValues.put(SQLiteDatabaseManager.FILE_PATH,"NA");
+			contentValues.put(SQLiteDatabaseManager.STATUS,"pending");
+			SQLiteDatabaseManager.getInstance(getActivity()).insert(SQLiteDatabaseManager.REQUEST_TABLE,contentValues);
+
+			getActivity().startService(new Intent(getActivity(), ProcessedDataIntentService.class));
 		}
 		catch (Exception e)
 		{

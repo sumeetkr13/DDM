@@ -30,12 +30,17 @@ public class VolleyConnectionRequest
     private HashMap<String, String> headers;
     private HashMap<String, String> postParams;
     private ResponseHandler responseHandler;
-    private String uniqueTag;
+    private int uniqueTag;
     private Request.Priority priority;
     private Context context;
     private boolean applyDefaultHeaders;
 
-    public VolleyConnectionRequest(Context context,String URL,int method,String uniqueTag,JSONObject jsonRequest,boolean applyDefaultHeaders,HashMap<String, String> headers,HashMap<String, String> postParams,Request.Priority priority,ResponseHandler responseHandler)
+    public int getUniqueTag()
+    {
+        return uniqueTag;
+    }
+
+    public VolleyConnectionRequest(Context context,String URL,int method,int uniqueTag,JSONObject jsonRequest,boolean applyDefaultHeaders,HashMap<String, String> headers,HashMap<String, String> postParams,Request.Priority priority,ResponseHandler responseHandler)
     {
         this.URL=URL;
         this.method=method;
@@ -49,7 +54,7 @@ public class VolleyConnectionRequest
         this.applyDefaultHeaders=applyDefaultHeaders;
 
         responseHandler.onPreExecute();
-        sendRequest();
+        //sendRequest();
     }
 
     public void sendRequest()
@@ -62,8 +67,8 @@ public class VolleyConnectionRequest
                         @Override
                         public void onResponse(JSONObject response)
                         {
-                            Log.d("tag", response.toString());
-                            responseHandler.onSuccessfulResponse(response);
+                            Log.d("tag1", response.toString());
+                            responseHandler.onSuccessfulResponse(response,uniqueTag);
                         }
                     },
                     new Response.ErrorListener()
@@ -103,7 +108,7 @@ public class VolleyConnectionRequest
 
             };
 
-            AppApplication.getInstance().addToRequestQueue(jsonObjReq, uniqueTag);
+            AppApplication.getInstance().addToRequestQueue(jsonObjReq, ""+uniqueTag);
     }
 
 
@@ -136,7 +141,7 @@ public class VolleyConnectionRequest
         return httpClient;
     }*/
 
-    public boolean isNetworkAvailable()
+    public static boolean isNetworkAvailable(Context context)
     {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null)

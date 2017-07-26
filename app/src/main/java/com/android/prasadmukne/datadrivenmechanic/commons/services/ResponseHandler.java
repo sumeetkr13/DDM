@@ -9,7 +9,7 @@ public abstract class ResponseHandler
 {
     public abstract void onPreExecute();
 
-    public abstract void onSuccessfulResponse(JSONObject response);
+    public abstract void onSuccessfulResponse(JSONObject response, int rowId);
 
     public abstract void onFailureResponse(Exception e);
 

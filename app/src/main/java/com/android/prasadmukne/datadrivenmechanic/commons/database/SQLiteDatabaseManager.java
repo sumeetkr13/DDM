@@ -112,7 +112,7 @@ public class SQLiteDatabaseManager
 		return sqLiteDatabase.delete(tableName, WhereClause, selectionArgs)> 0;
 	}
 
-	public boolean deleteOnRowId(String tableName, long rowId)
+	public boolean deleteOnRowId(String tableName, int rowId)
 	{
 		return sqLiteDatabase.delete(tableName, "_id" + "=" + rowId, null) > 0;
 	}

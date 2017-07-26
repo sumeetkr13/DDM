@@ -11,6 +11,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".AppApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -31,7 +32,8 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
-        <service android:name=".commons.services.ProcessedDataIntentService" />
+        <service android:name=".commons.services.ProcessedDataIntentService" >
+        </service>
     </application>
 
 </manifest>
