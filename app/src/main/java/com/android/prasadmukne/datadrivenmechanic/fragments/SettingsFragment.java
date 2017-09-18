@@ -74,7 +74,7 @@ public class SettingsFragment extends Fragment
 		{
 			normalUserRadioButton.setChecked(true);
 		}
-		else if(sharedPreferencesUtility.getString(AppConstants.USER_TYPE).equals(AppConstants.EXPER_TUSER))
+		else if(sharedPreferencesUtility.getString(AppConstants.USER_TYPE).equals(AppConstants.EXPERT_USER))
 		{
 			expertUserRadioButton.setChecked(true);
 		}
@@ -101,7 +101,7 @@ public class SettingsFragment extends Fragment
 		}
 		else if(isExpertUserRadioButtonChecked)
 		{
-			sharedPreferencesUtility.putString(AppConstants.USER_TYPE,AppConstants.EXPER_TUSER);
+			sharedPreferencesUtility.putString(AppConstants.USER_TYPE,AppConstants.EXPERT_USER);
 		}
 
 	}

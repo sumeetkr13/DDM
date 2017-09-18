@@ -17,13 +17,27 @@ public class SQLiteDatabaseManager
 
 	public static final String REQUEST_TABLE = "RequestTable";
 
+	public static final String RAW_TABLE = "RawTable";
+
 	public static final String ROW_ID = "_id";
 
 	public static final String REQUEST = "request";
 
 	public static final String FILE_PATH = "file_path";
 
+	public static final String FILE_NAME = "file_name";
+
 	public static final String STATUS = "status";
+
+	public static final String IS_EXPERT_USER = "isExpertUser";
+
+	public static final String IS_SYSTEM_FAULTY = "isSystemFaulty";
+
+	public static final String TIMESTAMP = "timestamp";
+
+	public static final String USERNAME = "username";
+
+
 
 	private SQLiteDatabaseManager(Context context)
 	{

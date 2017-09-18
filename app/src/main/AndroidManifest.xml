@@ -14,8 +14,10 @@
         android:name=".AppApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:hardwareAccelerated="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity android:name=".splash.SplashScreenActivity">
             <intent-filter>
@@ -27,12 +29,15 @@
         <activity android:name=".login.LoginScreenActivity" />
         <activity android:name=".base.BaseActivity" />
         <activity android:name=".privacy_policy.PrivacyPolicyActivity"/>
-        <receiver android:name="com.android.prasadmukne.datadrivenmechanic.commons.receivers.WifiReceiver" >
-            <intent-filter android:priority="100">
-                <action android:name="android.net.wifi.STATE_CHANGE" />
+
+       <!-- <receiver android:name="com.android.prasadmukne.datadrivenmechanic.commons.receivers.NetworkChangeReceiver" >
+            <intent-filter >
+              &lt;!&ndash;  <action android:name="android.net.wifi.STATE_CHANGE" />&ndash;&gt;
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
-        </receiver>
-        <service android:name=".commons.services.ProcessedDataIntentService" >
+        </receiver>-->
+        <service android:name=".commons.services.FeatureDataIntentService" >
         </service>
     </application>
 

@@ -52,7 +52,7 @@ public class VolleyConnectionRequest
         this.responseHandler=responseHandler;
         this.context=context;
         this.applyDefaultHeaders=applyDefaultHeaders;
-
+        Log.d("feature request", jsonRequest.toString());
         responseHandler.onPreExecute();
         //sendRequest();
     }
@@ -67,7 +67,7 @@ public class VolleyConnectionRequest
                         @Override
                         public void onResponse(JSONObject response)
                         {
-                            Log.d("tag1", response.toString());
+                            Log.d("FeatureSuccessResponse", response.toString());
                             responseHandler.onSuccessfulResponse(response,uniqueTag);
                         }
                     },
@@ -77,7 +77,7 @@ public class VolleyConnectionRequest
                         @Override
                         public void onErrorResponse(VolleyError error)
                         {
-                             VolleyLog.d("tag", "Error: " + error.getMessage());
+                             VolleyLog.d("FeatureErrorResponse", "" + error.getMessage());
                             responseHandler.onFailureResponse(error);
 
                         }

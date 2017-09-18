@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.prasadmukne.datadrivenmechanic.R;
 import com.android.prasadmukne.datadrivenmechanic.fragments.AboutUsFragment;
@@ -36,7 +35,7 @@ public class BaseActivity extends AppCompatActivity
 
 	private DrawerListAdapter drawerListAdapter;
 
-	private ListView draweristView;
+	private ListView drawerListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -72,8 +71,8 @@ public class BaseActivity extends AppCompatActivity
 	private void setupNavigationDrawer()
 	{
 		drawerListAdapter = new DrawerListAdapter(this, drawerItemArrayList);
-		draweristView.setAdapter(drawerListAdapter);
-		draweristView.setOnItemClickListener(new OnItemClickListener()
+		drawerListView.setAdapter(drawerListAdapter);
+		drawerListView.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -145,8 +144,8 @@ public class BaseActivity extends AppCompatActivity
 							fragmentTransaction.replace(R.id.content_frame, fragment, TAG).addToBackStack(null).commit();
 						}
 					}
-					draweristView.setItemChecked(position, true);
-					draweristView.setSelection(position);
+					drawerListView.setItemChecked(position, true);
+					drawerListView.setSelection(position);
 					drawerLayout.closeDrawer(Gravity.START);
 				}
 				catch (Exception e)
@@ -162,7 +161,7 @@ public class BaseActivity extends AppCompatActivity
 		//TextView primaryActionBarTextView = (TextView) findViewById(R.id.primaryActionBarTextView);
 		//primaryActionBarTextView.setVisibility(View.VISIBLE);
 		//primaryActionBarTextView.setText(getResources().getString(R.string.app_name));
-		draweristView = (ListView) findViewById(R.id.drawerListView);
+		drawerListView = (ListView) findViewById(R.id.drawerListView);
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 

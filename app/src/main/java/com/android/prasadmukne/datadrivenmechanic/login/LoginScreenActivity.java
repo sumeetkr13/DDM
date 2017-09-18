@@ -30,6 +30,7 @@ import com.android.prasadmukne.datadrivenmechanic.R;
 import com.android.prasadmukne.datadrivenmechanic.base.BaseActivity;
 import com.android.prasadmukne.datadrivenmechanic.utils.AVLoadingIndicatorView;
 import com.android.prasadmukne.datadrivenmechanic.utils.AppConstants;
+import com.android.prasadmukne.datadrivenmechanic.utils.SharedPreferencesUtility;
 import java.util.ArrayList;
 
 public class LoginScreenActivity extends AppCompatActivity implements View.OnClickListener
@@ -192,7 +193,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 			{
 				try
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				}
 				catch (InterruptedException e)
 				{
@@ -212,6 +213,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 					signInButton.setClickable(true);
 					if(usernamesArrayList.contains(username) && passwordArrayList.contains(password))
 					{
+						SharedPreferencesUtility.getSharedPreferencesUtility(LoginScreenActivity.this).putString(AppConstants.USERNAME,username);
 						startActivity(new Intent(LoginScreenActivity.this, BaseActivity.class));
 						finish();
 					}

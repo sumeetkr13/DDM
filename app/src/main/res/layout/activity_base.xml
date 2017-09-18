@@ -30,11 +30,17 @@
             android:layout_gravity="start"
             android:background="@color/colorPrimary">
 
+            <ImageView
+                android:id="@+id/imageVIew"
+                android:layout_width="fill_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/app_logo"/>
+
             <ListView
                 android:id="@+id/drawerListView"
+                android:layout_below="@+id/imageVIew"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="start"
                 android:choiceMode="singleChoice"
                 android:divider="@color/white"
