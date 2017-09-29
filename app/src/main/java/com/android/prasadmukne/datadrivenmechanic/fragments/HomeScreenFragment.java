@@ -41,7 +41,6 @@ import com.android.prasadmukne.datadrivenmechanic.utils.AppConstants;
 import com.android.prasadmukne.datadrivenmechanic.utils.SharedPreferencesUtility;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.json.JSONObject;
@@ -80,19 +79,7 @@ public class HomeScreenFragment extends Fragment
 		setRetainInstance(false);
 		try
 		{
-			((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.home);
-			chronometer = (Chronometer) view.findViewById(R.id.chronometer);
-			isSystemFaultyCheckBox = (CheckBox) view.findViewById(R.id.isSystemFaultyCheckBox);
-			isSystemFaultyCheckBox.setVisibility(View.INVISIBLE);
-
-			isSystemFaultyCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener()
-			{
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-				{
-					Log.d("isChecked", "isChecked " + isChecked);
-				}
-			});
+			initialiseUIElements();
 
 			setButtonHandlers();
 			enableButtons(false);
@@ -128,6 +115,23 @@ public class HomeScreenFragment extends Fragment
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, new IntentFilter(AppConstants.RESPONSE_RECEIVED));
 
 		return view;
+	}
+
+	private void initialiseUIElements()
+	{
+		((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.home);
+		chronometer = (Chronometer) view.findViewById(R.id.chronometer);
+		isSystemFaultyCheckBox = (CheckBox) view.findViewById(R.id.isSystemFaultyCheckBox);
+		isSystemFaultyCheckBox.setVisibility(View.INVISIBLE);
+
+		isSystemFaultyCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		{
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+			{
+				Log.d("isChecked", "isChecked " + isChecked);
+			}
+		});
 	}
 
 	@Override
@@ -454,7 +458,7 @@ public class HomeScreenFragment extends Fragment
 			{
 				case R.id.btnStart:
 				{
-					System.out.print("Start Recording");
+					Log.v("Start button onclick","Start Recording");
 
 					//enableButtons(true);
 					enableButton(R.id.btnStart, false);
@@ -465,7 +469,7 @@ public class HomeScreenFragment extends Fragment
 				}
 				case R.id.btnStop:
 				{
-					System.out.print("Stop Recording");
+					Log.v("stop button onclick","Stop Recording");
 
 					enableButtons(false);
 					stopRecording();
