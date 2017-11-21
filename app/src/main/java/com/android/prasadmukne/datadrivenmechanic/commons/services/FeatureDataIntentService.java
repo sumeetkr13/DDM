@@ -87,6 +87,7 @@ public class FeatureDataIntentService extends IntentService
 					if (netInfo.isConnected() && netInfo.isAvailable())
 					{
 						isMobile = true;
+
 					}
 				}
 
@@ -477,95 +478,162 @@ public class FeatureDataIntentService extends IntentService
 	private HashMap<String, HashMap> getFeatureArrays(ArrayList myList1, ArrayList myList2)
 	{
 		HashMap<String, HashMap> featuresHashMap = new HashMap<>();
-		// General variable declaration
-		int Fs = 48000; // Sampling frequency
-		double sampleDuration = 2.5; //Time, in seconds, of sample to be used for fingerprint analysis
-		int centerFs = Fs / 2; // For centering FFT
-		int sampleLength = (int) Math.round(Fs * sampleDuration); // Determine the length of a sample
-		System.out.println("Digital signal of 2.5s @ 48kHz is of length = " + sampleLength);
 
-		// Frequency feature parameters
-		double lowerWindowBound = 0; // Set the lower bound for the region of interest, in Hz
-		double upperWindowBound = 10000; // Set the upper bound for the region of interest, in Hz
-		double binWidthHz = 10; // Set the uniform window size, in Hz
-		double startedge = 1.0; //duration of the audio to leave in the start in sec
-		double endedge = 1.0; //duration of the audio to leave in the end in sec
-		int startedgeLength = (int) Math.round(Fs * startedge);
-		int endedgeLength = (int) Math.round(Fs * endedge);
+		/*---------------------------------------------------------*/
+		double[] binnedfreqsfinal = null;
+		double[][] binnedfeatFFT2Dfinal = null;
+		double[][] featfinal=null;
 
-		// histBinRanges = (lowerWindowBound:binWidthHz:upperWindowBound); % Works well at sample duration 0.5s
-
-		double freqbin = (double) Fs / sampleLength; // Spacing between FFT values in terms of Hz
-		// Bin size over which averaging needs to happen for calculating binned-avg FFT feature
-		int bindel = (int) Math.round(binWidthHz / freqbin);
-
-		// One-sided frequency and FFT arrays
-		double[] freqs = new double[(int) (sampleLength / 2)];
-		// Binned mid-point frequency
-		double[] binnedfreqs = new double[(int) (sampleLength / (bindel * 2))];
-
-		// Generating the frequency array
-		for (int i = 0; i < freqs.length; i++)
+		try
 		{
-			freqs[i] = (double) (1.0 * Fs * i) / (2 * freqs.length);
-			// System.out.println(freqs[i]);
-		}
-		double[] monoAudioSig = FeatgenFFT.convertoMono(myList1, myList2, sampleLength, startedgeLength, endedgeLength);
-		double audiosigarr[][] = FeatgenFFT.convert1Dto2DArray(monoAudioSig, sampleLength);
-		double featFFT2D[][] = FeatgenFFT.FFT2DArr(audiosigarr);
+			// General variable declaration
+			int Fs = 48000; // Sampling frequency
+			double sampleDuration = 2.5; //Time, in seconds, of sample to be used for fingerprint analysis
+			int centerFs = Fs/2; // For centering FFT
+			int sampleLength = (int) Math.round(Fs*sampleDuration); // Determine the length of a sample
+			System.out.println("Digital signal of 2.5s @ 48kHz is of length = " + sampleLength);
 
-		// Sub-selecting half of the array length representing one sided spectrum
-		double featFFT2Dos[][] = new double[freqs.length][featFFT2D[0].length];
-		for (int j = 0; j < featFFT2D[0].length; j++)
-		{
-			for (int i = 0; i < freqs.length; i++)
-			{
-				featFFT2Dos[i][j] = featFFT2D[i][j];
+
+			// Frequency feature parameters
+			double lowerWindowBound = 0; // Set the lower bound for the region of interest, in Hz
+			double upperWindowBound = 10000; // Set the upper bound for the region of interest, in Hz
+			double binWidthHz = 10; // Set the uniform window size, in Hz
+			double startedge = 1.0; //duration of the audio to leave in the start in sec
+			double endedge = 1.0; //duration of the audio to leave in the end in sec
+			int startedgeLength = (int) Math.round(Fs*startedge);
+			int endedgeLength = (int) Math.round(Fs*endedge);
+
+			// histBinRanges = (lowerWindowBound:binWidthHz:upperWindowBound); % Works well at sample duration 0.5s
+
+			double freqbin = (double) Fs/sampleLength; // Spacing between FFT values in terms of Hz
+			// Bin size over which averaging needs to happen for calculating binned-avg FFT feature
+			int bindel = (int) Math.round(binWidthHz/freqbin);
+
+			// One-sided frequency and FFT arrays
+			double[] freqs = new double[(int) (sampleLength/2)];
+			// Binned mid-point frequency
+			double[] binnedfreqs = new double[(int) (sampleLength/(bindel*2))];
+
+			// Generating the frequency array
+			for(int i = 0; i < freqs.length; i++) {
+				freqs[i] = (double) (1.0*Fs*i)/(2*freqs.length);
+				// System.out.println(freqs[i]);
 			}
-		}
+			System.out.println("Maximum frequency = " + freqs[(freqs.length-1)]);
 
-		// Perform binning of frequency array and binned-averaging of FFT
-		int halfdel = (int) bindel / 2;
-		double binnedfeatFFT2D[][] = new double[binnedfreqs.length][featFFT2Dos[0].length];
-		for (int l = 0; l < featFFT2Dos[0].length; l++)
-		{
-			int k = 0;
-			for (int i = 0; i < binnedfreqs.length; i++)
-			{
-				binnedfreqs[i] = freqs[k + halfdel];
-				double val = 0;
-				for (int j = 0; j < bindel; j++)
-				{
-					val = val + featFFT2Dos[k + j][l];
+			System.out.println("Current directory is " + System.getProperty("user.dir"));
+
+			// Reading the text files, might need a different IO
+			// Need to make sure that the input files have at  least 5 seconds of data
+//			String filename1 = "leftChannel.txt";
+//			String filename2 = "rightChannel.txt";
+//
+//			// Read the data from the text file and store the data in an Array List of double values
+//			ArrayList<Double> myList1 = readAuidoChannelFile(filename1);
+//			ArrayList<Double> myList2 = readAuidoChannelFile(filename2);
+
+			double[] monoAudioSig = FeatgenFFT.convertoMono(myList1, myList2, sampleLength, startedgeLength, endedgeLength);
+			System.out.println("The audio data is a digital signal of length " + monoAudioSig.length);
+
+			double audiosigarr[][] = FeatgenFFT.convert1Dto2DArray(monoAudioSig, sampleLength);
+			System.out.println("Size of the 2D signal array = "+ audiosigarr.length +"*"+ audiosigarr[0].length);
+
+
+			double featFFT2D[][] = FeatgenFFT.FFT2DArr(audiosigarr);
+			System.out.println("Size of the FFT 2D array = "+ featFFT2D.length +"*"+ featFFT2D[0].length);
+
+			double audFeat[][] = FeatgenFFT.audFeat(audiosigarr);
+			System.out.println("The audio features of the digital signal array is of size " + audFeat.length + "*" + audFeat[0].length);
+
+			System.out.println("Length of the frequency array = " + freqs.length);
+			System.out.println("Length of the binned frequency array = " + binnedfreqs.length);
+
+			// Sub-selecting half of the array length representing one sided spectrum
+			double featFFT2Dos[][] = new double[freqs.length][featFFT2D[0].length];
+			for(int j = 0; j < featFFT2D[0].length; j++) {
+				for(int i = 0; i < freqs.length; i++) {
+					featFFT2Dos[i][j] = featFFT2D[i][j] ;
 				}
-				val = val / bindel;
-				k = k + bindel;
-				binnedfeatFFT2D[i][l] = val;
-				// System.out.println("At frequency = " + binnedfreqs[i] + "Hz, feature value = " + binnedfeatFFT2D[i][l] );
 			}
-		}
-		int maxind = FeatgenFFT.maxiArr(binnedfreqs, upperWindowBound);
-		// Final output of the code as a frequency 1D array and a feature 2D array
-		double[] binnedfreqsfinal = new double[(maxind + 1)];
-		double[][] binnedfeatFFT2Dfinal = new double[(maxind + 1)][binnedfeatFFT2D[0].length];
-		for (int i = 0; i <= maxind; i++)
-		{
-			binnedfreqsfinal[i] = binnedfreqs[i];
-		}
-		for (int j = 0; j < binnedfeatFFT2D[0].length; j++)
-		{
-			for (int i = 0; i <= maxind; i++)
-			{
-				binnedfeatFFT2Dfinal[i][j] = binnedfeatFFT2D[i][j];
+
+			System.out.println("Size of the onesided-FFT 2D array = " + featFFT2Dos.length + "*" + featFFT2Dos[0].length);
+
+
+			// Perform binning of frequency array and binned-averaging of FFT
+			int halfdel = (int) bindel/2;
+			System.out.println("No. of indices to average over = " + halfdel);
+
+			double binnedfeatFFT2D[][]  = new double[binnedfreqs.length][featFFT2Dos[0].length];
+
+			for(int l = 0; l < featFFT2Dos[0].length; l++) {
+				int k = 0;
+				for(int i = 0; i < binnedfreqs.length; i++) {
+					binnedfreqs[i] = freqs[k + halfdel];
+					double val = 0;
+					for(int j = 0; j < bindel; j++) {
+						val = val + featFFT2Dos[k+j][l];
+					}
+					val = val/bindel;
+					k = k + bindel;
+					binnedfeatFFT2D[i][l] = val;
+					// System.out.println("At frequency = " + binnedfreqs[i] + "Hz, feature value = " + binnedfeatFFT2D[i][l] );
+				}
 			}
+
+
+			System.out.println("Size of the binned-frequencies = " + binnedfreqs.length);
+			System.out.println("Size of the binned-onesided-FFT 2D array of the input signal = " + binnedfeatFFT2D.length + "*" + binnedfeatFFT2D[0].length);
+
+			System.out.println("Maximum binned frequency = " + binnedfreqs[(binnedfreqs.length-1)]);
+
+			int maxind = FeatgenFFT.maxiArr(binnedfreqs, upperWindowBound);
+			System.out.println("Length of the upper bounded binned frequency array = " + (maxind+1));
+			System.out.println("Max frequency = " + binnedfreqs[maxind]);
+
+
+			// Final output of the code as a frequency 1D array and a feature 2D array
+			binnedfreqsfinal = new double[(maxind+1)];
+			binnedfeatFFT2Dfinal = new double[(maxind+1)][binnedfeatFFT2D[0].length];
+
+			for(int i = 0; i <= maxind; i++) {
+				binnedfreqsfinal[i] = binnedfreqs[i];
+			}
+			System.out.println("Max frequency = " + binnedfreqsfinal[(binnedfreqsfinal.length-1)]);
+
+			for(int j = 0; j < binnedfeatFFT2D[0].length; j++) {
+				for(int i = 0; i <= maxind; i++) {
+					binnedfeatFFT2Dfinal[i][j] = binnedfeatFFT2D[i][j];
+				}
+			}
+
+			System.out.println("Length of the final frequency array = " + binnedfreqsfinal.length + " with the max frequency = " + binnedfreqsfinal[(maxind-1)]);
+			System.out.println("Size of the binned-onesided-fequencycapped-FFT 2D array of the input signal = " + binnedfeatFFT2Dfinal.length + "*" + binnedfeatFFT2Dfinal[0].length);
+
+
+			featfinal = new double[(binnedfeatFFT2Dfinal.length+3)][binnedfeatFFT2Dfinal[0].length];
+
+			for(int j = 0; j < binnedfeatFFT2Dfinal[0].length; j++) {
+				for(int i = 0; i < binnedfeatFFT2Dfinal.length; i++) {
+					featfinal[i][j] = binnedfeatFFT2Dfinal[i][j];
+				}
+				featfinal[binnedfeatFFT2Dfinal.length][j] = audFeat[0][j];
+				featfinal[binnedfeatFFT2Dfinal.length+1][j] = audFeat[1][j];
+				featfinal[binnedfeatFFT2Dfinal.length+2][j] = audFeat[2][j];
+			}
+
+			System.out.println("Size of the binned-onesided-fequencycapped-FFT 2D array + audio features of the input signal = " + featfinal.length + "*" + featfinal[0].length);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 
-		System.out.println("Length of the final frequency array = " + binnedfreqsfinal.length + " with the max frequency = " + binnedfreqsfinal[(maxind - 1)]);
-		System.out.println("Size of the binned-onesided-fequencycapped-FFT 2D array of the input signal = " + binnedfeatFFT2Dfinal.length + "*" + binnedfeatFFT2Dfinal[0].length);
+/*---------------------------------------------------------*/
+
 		HashMap<String, double[]> binnedfreqsfinalHashMap = new HashMap();
 		binnedfreqsfinalHashMap.put("binnedfreqs", binnedfreqsfinal);
 		HashMap<String, double[][]> binnedfeatFFT2DfinalHashMap = new HashMap();
-		binnedfeatFFT2DfinalHashMap.put("binnedfeatFFT", binnedfeatFFT2Dfinal);
+		binnedfeatFFT2DfinalHashMap.put("binnedfeatFFT", featfinal);
 		featuresHashMap.put("binnedfreqsfinal", binnedfreqsfinalHashMap);
 		featuresHashMap.put("binnedfeatFFT2Dfinal", binnedfeatFFT2DfinalHashMap);
 

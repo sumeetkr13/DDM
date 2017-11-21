@@ -52,13 +52,13 @@ public class DrawerListAdapter extends BaseAdapter
 	@Override
 		public View getView(int position, View convertView, ViewGroup parent)
 		{
-			TextView itemNameTextView = null;
-			if (convertView == null)
-			{
+			//TextView itemNameTextView = null;
+			//if (convertView == null)
+			//{
 				LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 				convertView = inflater.inflate(R.layout.adapter_drawer_list_item, parent, false);
-				itemNameTextView= (TextView) convertView.findViewById(R.id.itemNameTextView);
-			}
+				TextView itemNameTextView= (TextView) convertView.findViewById(R.id.itemNameTextView);
+			//}
 			itemNameTextView.setText(drawerItemList.get(position));
 
 			return convertView;

@@ -13,6 +13,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Chronometer;
-import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
@@ -70,6 +70,8 @@ public class HomeScreenFragment extends Fragment
 	private Chronometer chronometer;
 	private String lastFileName = "";
 	private ProgressDialog progressDialog;
+	private Handler maxLimitHandler;
+	private Runnable maxLimitRunnable;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -198,6 +200,34 @@ public class HomeScreenFragment extends Fragment
 		{
 			chronometer.setBase(SystemClock.elapsedRealtime());
 			chronometer.start();
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					final Handler handler = new Handler();
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							enableButton(R.id.btnStop, true);
+						}
+					}, 5000);
+				}
+			});
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					maxLimitHandler = new Handler();
+					maxLimitRunnable=new Runnable() {
+						@Override
+						public void run() {
+							enableButtons(false);
+							stopRecording();
+							Toast.makeText(getActivity(), "You can record audio for max 5 mins.", Toast.LENGTH_SHORT).show();
+
+						}
+					};
+					maxLimitHandler.postDelayed(maxLimitRunnable, 300000);
+				}
+			});
 			recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLE_RATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, bufferSize);
 
 			int i = recorder.getState();
@@ -219,7 +249,8 @@ public class HomeScreenFragment extends Fragment
 			}, "AudioRecorder Thread");
 
 			recordingThread.start();
-			chronometer.setOnChronometerTickListener(new OnChronometerTickListener()
+
+			/*chronometer.setOnChronometerTickListener(new OnChronometerTickListener()
 			{
 				@Override
 				public void onChronometerTick(Chronometer chronometer)
@@ -236,7 +267,7 @@ public class HomeScreenFragment extends Fragment
 						Toast.makeText(getActivity(), "You can record audio for max 5 mins.", Toast.LENGTH_SHORT).show();
 					}
 				}
-			});
+			});*/
 		}
 		catch (Exception e)
 		{
@@ -309,6 +340,7 @@ public class HomeScreenFragment extends Fragment
 
 				recorder = null;
 				recordingThread = null;
+				maxLimitHandler.removeCallbacks(maxLimitRunnable);
 			}
 			long timestamp = System.currentTimeMillis();
 			String filePath = getFilename("" + timestamp);

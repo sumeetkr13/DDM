@@ -1,12 +1,11 @@
 package com.android.prasadmukne.datadrivenmechanic.feature;
 
-
-/*
+/* 
  * Free FFT and convolution (Java)
- *
+ * 
  * Copyright (c) 2017 Project Nayuki. (MIT License)
  * https://www.nayuki.io/page/free-small-fft-in-multiple-languages
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
@@ -26,15 +25,15 @@ package com.android.prasadmukne.datadrivenmechanic.feature;
 
 
 public final class Fft {
-
-	/*
+	
+	/* 
 	 * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
 	 * The vector can have any length. This is a wrapper function.
 	 */
 	public static void transform(double[] real, double[] imag) {
 		if (real.length != imag.length)
 			throw new IllegalArgumentException("Mismatched lengths");
-
+		
 		int n = real.length;
 		if (n == 0)
 			return;
@@ -43,18 +42,18 @@ public final class Fft {
 		else  // More complicated algorithm for arbitrary sizes
 			transformBluestein(real, imag);
 	}
-
-
-	/*
+	
+	
+	/* 
 	 * Computes the inverse discrete Fourier transform (IDFT) of the given complex vector, storing the result back into the vector.
 	 * The vector can have any length. This is a wrapper function. This transform does not perform scaling, so the inverse is not a true inverse.
 	 */
 	public static void inverseTransform(double[] real, double[] imag) {
 		transform(imag, real);
 	}
-
-
-	/*
+	
+	
+	/* 
 	 * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
 	 * The vector's length must be a power of 2. Uses the Cooley-Tukey decimation-in-time radix-2 algorithm.
 	 */
@@ -66,7 +65,7 @@ public final class Fft {
 		int levels = 31 - Integer.numberOfLeadingZeros(n);  // Equal to floor(log2(n))
 		if (1 << levels != n)
 			throw new IllegalArgumentException("Length is not a power of 2");
-
+		
 		// Trigonometric tables
 		double[] cosTable = new double[n / 2];
 		double[] sinTable = new double[n / 2];
@@ -74,7 +73,7 @@ public final class Fft {
 			cosTable[i] = Math.cos(2 * Math.PI * i / n);
 			sinTable[i] = Math.sin(2 * Math.PI * i / n);
 		}
-
+		
 		// Bit-reversed addressing permutation
 		for (int i = 0; i < n; i++) {
 			int j = Integer.reverse(i) >>> (32 - levels);
@@ -87,7 +86,7 @@ public final class Fft {
 				imag[j] = temp;
 			}
 		}
-
+		
 		// Cooley-Tukey decimation-in-time radix-2 FFT
 		for (int size = 2; size <= n; size *= 2) {
 			int halfsize = size / 2;
@@ -106,9 +105,9 @@ public final class Fft {
 				break;
 		}
 	}
-
-
-	/*
+	
+	
+	/* 
 	 * Computes the discrete Fourier transform (DFT) of the given complex vector, storing the result back into the vector.
 	 * The vector can have any length. This requires the convolution function, which in turn requires the radix-2 FFT function.
 	 * Uses Bluestein's chirp z-transform algorithm.
@@ -121,7 +120,7 @@ public final class Fft {
 		if (n >= 0x20000000)
 			throw new IllegalArgumentException("Array too large");
 		int m = Integer.highestOneBit(n * 2) << 1;
-
+		
 		// Trignometric tables
 		double[] cosTable = new double[n];
 		double[] sinTable = new double[n];
@@ -130,7 +129,7 @@ public final class Fft {
 			cosTable[i] = Math.cos(Math.PI * j / n);
 			sinTable[i] = Math.sin(Math.PI * j / n);
 		}
-
+		
 		// Temporary vectors and preprocessing
 		double[] areal = new double[m];
 		double[] aimag = new double[m];
@@ -146,21 +145,21 @@ public final class Fft {
 			breal[i] = breal[m - i] = cosTable[i];
 			bimag[i] = bimag[m - i] = sinTable[i];
 		}
-
+		
 		// Convolution
 		double[] creal = new double[m];
 		double[] cimag = new double[m];
 		convolve(areal, aimag, breal, bimag, creal, cimag);
-
+		
 		// Postprocessing
 		for (int i = 0; i < n; i++) {
 			real[i] =  creal[i] * cosTable[i] + cimag[i] * sinTable[i];
 			imag[i] = -creal[i] * sinTable[i] + cimag[i] * cosTable[i];
 		}
 	}
-
-
-	/*
+	
+	
+	/* 
 	 * Computes the circular convolution of the given real vectors. Each vector's length must be the same.
 	 */
 	public static void convolve(double[] x, double[] y, double[] out) {
@@ -169,37 +168,37 @@ public final class Fft {
 			throw new IllegalArgumentException("Mismatched lengths");
 		convolve(x, new double[n], y, new double[n], out, new double[n]);
 	}
-
-
-	/*
+	
+	
+	/* 
 	 * Computes the circular convolution of the given complex vectors. Each vector's length must be the same.
 	 */
 	public static void convolve(double[] xreal, double[] ximag,
-		double[] yreal, double[] yimag, double[] outreal, double[] outimag) {
-
+			double[] yreal, double[] yimag, double[] outreal, double[] outimag) {
+		
 		int n = xreal.length;
 		if (n != ximag.length || n != yreal.length || n != yimag.length
-			|| n != outreal.length || n != outimag.length)
+				|| n != outreal.length || n != outimag.length)
 			throw new IllegalArgumentException("Mismatched lengths");
-
+		
 		xreal = xreal.clone();
 		ximag = ximag.clone();
 		yreal = yreal.clone();
 		yimag = yimag.clone();
 		transform(xreal, ximag);
 		transform(yreal, yimag);
-
+		
 		for (int i = 0; i < n; i++) {
 			double temp = xreal[i] * yreal[i] - ximag[i] * yimag[i];
 			ximag[i] = ximag[i] * yreal[i] + xreal[i] * yimag[i];
 			xreal[i] = temp;
 		}
 		inverseTransform(xreal, ximag);
-
+		
 		for (int i = 0; i < n; i++) {  // Scaling (because this FFT implementation omits it)
 			outreal[i] = xreal[i] / n;
 			outimag[i] = ximag[i] / n;
 		}
 	}
-
+	
 }

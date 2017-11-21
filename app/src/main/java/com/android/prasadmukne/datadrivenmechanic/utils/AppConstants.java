@@ -18,9 +18,9 @@ public class AppConstants
 
 	//public static final String RAW_DATA_SENDING_URL ="http://ec2-34-230-85-161.compute-1.amazonaws.com:8080/DDMWebApplication/rest/rawdata/fileupload";
 
-	//public static final String FEATURE_DATA_SENDING_URL ="http://192.168.1.105:8081/DDMWebApplication/rest/feature/saveFeature";
+	//public static final String FEATURE_DATA_SENDING_URL ="http://192.168.43.68:8080/DDMWebApplication/rest/feature/saveFeature";
 
-	//public static final String RAW_DATA_SENDING_URL ="http://192.168.1.105:8081/DDMWebApplication/rest/rawdata/fileupload";
+	//public static final String RAW_DATA_SENDING_URL ="http://192.168.43.68:8080/DDMWebApplication/rest/rawdata/fileupload";
 
 	public static final String FEATURE_DATA_SENDING_URL ="http://ec2-34-207-151-145.compute-1.amazonaws.com:8080/DDMWebApplication/rest/feature/saveFeature";
 

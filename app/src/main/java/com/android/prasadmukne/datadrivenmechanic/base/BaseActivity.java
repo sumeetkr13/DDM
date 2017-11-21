@@ -3,6 +3,7 @@ package com.android.prasadmukne.datadrivenmechanic.base;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -24,6 +25,11 @@ import com.android.prasadmukne.datadrivenmechanic.fragments.HomeScreenFragment;
 import com.android.prasadmukne.datadrivenmechanic.fragments.PrivacyPolicyFragment;
 import com.android.prasadmukne.datadrivenmechanic.fragments.SettingsFragment;
 import com.android.prasadmukne.datadrivenmechanic.login.LoginScreenActivity;
+import com.android.prasadmukne.datadrivenmechanic.utils.TopExceptionHandler;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class BaseActivity extends AppCompatActivity
@@ -45,6 +51,8 @@ public class BaseActivity extends AppCompatActivity
 
 		try
 		{
+			Thread.setDefaultUncaughtExceptionHandler(new TopExceptionHandler(this));
+
 			Toolbar toolbar = setupToolbar();
 
 			initialiseUIElements(toolbar);
@@ -131,6 +139,7 @@ public class BaseActivity extends AppCompatActivity
 					{
 						drawerLayout.closeDrawer(Gravity.START);
 						showLogoutDialog();
+						generateDebugLogs();
 					}
 
 					if (fragment != null)
@@ -232,5 +241,47 @@ public class BaseActivity extends AppCompatActivity
 			}
 		}).setCancelable(false).setIcon(R.drawable.ic_logout_icon).show();
 	}
+
+	private void generateDebugLogs()
+	{
+		StringBuilder log=new StringBuilder();
+		try {
+			Process process = Runtime.getRuntime().exec("logcat -d");
+			BufferedReader bufferedReader = new BufferedReader(
+				new InputStreamReader(process.getInputStream()));
+
+
+			String line = "";
+			while ((line = bufferedReader.readLine()) != null) {
+				log.append(line);
+			}
+			//TextView tv = (TextView)findViewById(R.id.textView1);
+			//tv.setText(log.toString());
+			FileOutputStream trace = new FileOutputStream(Environment.getExternalStorageDirectory()+"/ddm.logs");
+
+			trace.write(log.toString().getBytes());
+			trace.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		new AlertDialog.Builder(this).setTitle("Logout").setMessage("Do you really want to logout this app?").setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which)
+			{
+				Intent intent = new Intent(BaseActivity.this, LoginScreenActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				finish();
+				// System.exit(0);
+			}
+		}).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int which)
+			{
+				dialog.dismiss();
+			}
+		}).setCancelable(false).setIcon(R.drawable.ic_logout_icon).show();
+	}
+
 
 }

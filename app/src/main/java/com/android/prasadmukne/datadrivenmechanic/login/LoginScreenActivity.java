@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.prasadmukne.datadrivenmechanic.BuildConfig;
 import com.android.prasadmukne.datadrivenmechanic.R;
 import com.android.prasadmukne.datadrivenmechanic.base.BaseActivity;
 import com.android.prasadmukne.datadrivenmechanic.utils.AVLoadingIndicatorView;
@@ -97,8 +98,8 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 		//primaryActionBarTextView.setVisibility(View.VISIBLE);
 		//primaryActionBarTextView.setText(getResources().getString(R.string.app_name));
 
-		//TextView versionNumberTextView = (TextView) findViewById(R.id.versionNumberTextView);
-		// versionNumberTextView.setText(BuildConfig.VERSION_CODE);
+		TextView versionNumberTextView = (TextView) findViewById(R.id.versionNumberTextView);
+		versionNumberTextView.setText("Version v"+BuildConfig.VERSION_NAME);
 
 		usernameEditText = (EditText) findViewById(R.id.usernameEditText);
 		passwordEditText = (EditText) findViewById(R.id.passwordEditText);
