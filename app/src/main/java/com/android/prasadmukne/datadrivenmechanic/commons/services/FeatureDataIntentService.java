@@ -488,10 +488,10 @@ public class FeatureDataIntentService extends IntentService
 		{
 			// General variable declaration
 			int Fs = 48000; // Sampling frequency
-			double sampleDuration = 2.5; //Time, in seconds, of sample to be used for fingerprint analysis
 			int centerFs = Fs/2; // For centering FFT
-			int sampleLength = (int) Math.round(Fs*sampleDuration); // Determine the length of a sample
-			System.out.println("Digital signal of 2.5s @ 48kHz is of length = " + sampleLength);
+			int sampleLength = 131072; //Length of a sample should be a power of 2 and >= 2.5s
+			double sampleDuration = Math.round(100.0*sampleLength/Fs)/100.0; //Time, in seconds, of sample to be used for fingerprint analysis
+			System.out.println("Digital signal of " + sampleDuration + "s @ 48kHz is of length = " + sampleLength);
 
 
 			// Frequency feature parameters
@@ -507,7 +507,7 @@ public class FeatureDataIntentService extends IntentService
 
 			double freqbin = (double) Fs/sampleLength; // Spacing between FFT values in terms of Hz
 			// Bin size over which averaging needs to happen for calculating binned-avg FFT feature
-			int bindel = (int) Math.round(binWidthHz/freqbin);
+			int bindel = (int) Math.floor((sampleLength*binWidthHz)/Fs);
 
 			// One-sided frequency and FFT arrays
 			double[] freqs = new double[(int) (sampleLength/2)];
@@ -523,14 +523,16 @@ public class FeatureDataIntentService extends IntentService
 
 			System.out.println("Current directory is " + System.getProperty("user.dir"));
 
+			/*
 			// Reading the text files, might need a different IO
 			// Need to make sure that the input files have at  least 5 seconds of data
-//			String filename1 = "leftChannel.txt";
-//			String filename2 = "rightChannel.txt";
-//
-//			// Read the data from the text file and store the data in an Array List of double values
-//			ArrayList<Double> myList1 = readAuidoChannelFile(filename1);
-//			ArrayList<Double> myList2 = readAuidoChannelFile(filename2);
+			String filename1 = "leftChannel.txt";
+			String filename2 = "rightChannel.txt";
+
+			// Read the data from the text file and store the data in an Array List of double values
+			ArrayList<Double> myList1 = readAuidoChannelFile(filename1);
+			ArrayList<Double> myList2 = readAuidoChannelFile(filename2);
+			*/
 
 			double[] monoAudioSig = FeatgenFFT.convertoMono(myList1, myList2, sampleLength, startedgeLength, endedgeLength);
 			System.out.println("The audio data is a digital signal of length " + monoAudioSig.length);
@@ -560,22 +562,28 @@ public class FeatureDataIntentService extends IntentService
 
 
 			// Perform binning of frequency array and binned-averaging of FFT
-			int halfdel = (int) bindel/2;
-			System.out.println("No. of indices to average over = " + halfdel);
+			int halfdel = (int) (bindel/2);
+			System.out.println("Center of bin delta = " + halfdel);
 
 			double binnedfeatFFT2D[][]  = new double[binnedfreqs.length][featFFT2Dos[0].length];
 
 			for(int l = 0; l < featFFT2Dos[0].length; l++) {
 				int k = 0;
 				for(int i = 0; i < binnedfreqs.length; i++) {
-					binnedfreqs[i] = freqs[k + halfdel];
-					double val = 0;
-					for(int j = 0; j < bindel; j++) {
-						val = val + featFFT2Dos[k+j][l];
+					if(k+halfdel < freqs.length) {
+						binnedfreqs[i] = freqs[k + halfdel];
+						double val = 0;
+						for(int j = 0; j < bindel; j++) {
+							if(k +  j < featFFT2Dos.length) {
+								val = val + featFFT2Dos[k+j][l];
+							} else {
+								j = bindel;
+							}
+						}
+						val = val/bindel;
+						binnedfeatFFT2D[i][l] = val;
+						k = k + bindel;
 					}
-					val = val/bindel;
-					k = k + bindel;
-					binnedfeatFFT2D[i][l] = val;
 					// System.out.println("At frequency = " + binnedfreqs[i] + "Hz, feature value = " + binnedfeatFFT2D[i][l] );
 				}
 			}

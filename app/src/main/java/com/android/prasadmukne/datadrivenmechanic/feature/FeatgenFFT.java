@@ -68,8 +68,8 @@ public class FeatgenFFT {
 		int m = (int) Math.floor(1.0*monoAudioSig.length/sampleLength);
 		double audiosigarr[][] = new double[sampleLength][m];
 		int t = 0;
-		for(int i = 0; i < sampleLength; i++) {
-			for(int j = 0; j < m; j++) {
+		for(int j = 0; j < m; j++) {
+			for(int i = 0; i < sampleLength; i++) {
 				audiosigarr[i][j] = monoAudioSig[t];
 				t++;
 			}
@@ -251,13 +251,13 @@ public class FeatgenFFT {
 	}
 
 	public static void main(String[] args) throws Exception {
-		
+
 		// General variable declaration
-        int Fs = 48000; // Sampling frequency
-        double sampleDuration = 2.5; //Time, in seconds, of sample to be used for fingerprint analysis
-        int centerFs = Fs/2; // For centering FFT
-        int sampleLength = (int) Math.round(Fs*sampleDuration); // Determine the length of a sample
-        System.out.println("Digital signal of 2.5s @ 48kHz is of length = " + sampleLength);
+		int Fs = 48000; // Sampling frequency
+		int centerFs = Fs/2; // For centering FFT
+		int sampleLength = 131072; //Length of a sample should be a power of 2 and >= 2.5s
+		double sampleDuration = Math.round(100.0*sampleLength/Fs)/100.0; //Time, in seconds, of sample to be used for fingerprint analysis
+		System.out.println("Digital signal of " + sampleDuration + "s @ 48kHz is of length = " + sampleLength);
         
         
         // Frequency feature parameters
@@ -273,9 +273,9 @@ public class FeatgenFFT {
         
         double freqbin = (double) Fs/sampleLength; // Spacing between FFT values in terms of Hz
         // Bin size over which averaging needs to happen for calculating binned-avg FFT feature
-        int bindel = (int) Math.round(binWidthHz/freqbin); 
-        
-        // One-sided frequency and FFT arrays
+		int bindel = (int) Math.floor((sampleLength*binWidthHz)/Fs);
+
+		// One-sided frequency and FFT arrays
         double[] freqs = new double[(int) (sampleLength/2)];
         // Binned mid-point frequency
         double[] binnedfreqs = new double[(int) (sampleLength/(bindel*2))];
@@ -326,23 +326,29 @@ public class FeatgenFFT {
 		
 		
 		// Perform binning of frequency array and binned-averaging of FFT
-		int halfdel = (int) bindel/2;
-		System.out.println("No. of indices to average over = " + halfdel);
+		int halfdel = (int) (bindel/2);
+		System.out.println("Center of bin delta = " + halfdel);
 		
 		double binnedfeatFFT2D[][]  = new double[binnedfreqs.length][featFFT2Dos[0].length];
-		
+
 		for(int l = 0; l < featFFT2Dos[0].length; l++) {
 			int k = 0;
 			for(int i = 0; i < binnedfreqs.length; i++) {
-    				binnedfreqs[i] = freqs[k + halfdel];
-    				double val = 0;
-    				for(int j = 0; j < bindel; j++) {
-    					val = val + featFFT2Dos[k+j][l];
-    				}
-    				val = val/bindel;
-    				k = k + bindel;
-    				binnedfeatFFT2D[i][l] = val;
-    				// System.out.println("At frequency = " + binnedfreqs[i] + "Hz, feature value = " + binnedfeatFFT2D[i][l] );
+				if(k+halfdel < freqs.length) {
+					binnedfreqs[i] = freqs[k + halfdel];
+					double val = 0;
+					for(int j = 0; j < bindel; j++) {
+						if(k +  j < featFFT2Dos.length) {
+							val = val + featFFT2Dos[k+j][l];
+						} else {
+							j = bindel;
+						}
+					}
+					val = val/bindel;
+					binnedfeatFFT2D[i][l] = val;
+					k = k + bindel;
+				}
+				// System.out.println("At frequency = " + binnedfreqs[i] + "Hz, feature value = " + binnedfeatFFT2D[i][l] );
 			}
 		}
 
@@ -354,7 +360,7 @@ public class FeatgenFFT {
 		
 		int maxind = maxiArr(binnedfreqs, upperWindowBound);
 		System.out.println("Length of the upper bounded binned frequency array = " + (maxind+1));
-		System.out.println("Max frequency = " + binnedfreqs[maxind]);
+		// System.out.println("Max frequency = " + binnedfreqs[maxind]);
 		
 		
 		// Final output of the code as a frequency 1D array and a feature 2D array
