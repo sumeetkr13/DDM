@@ -81,15 +81,12 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 		usernamesArrayList.add("prasad");
 		usernamesArrayList.add("josh");
 		usernamesArrayList.add("rahul");
-		usernamesArrayList.add("sumeet1");
-		usernamesArrayList.add("prasad1");
-		usernamesArrayList.add("josh1");
-		usernamesArrayList.add("rahul1");
 		usernamesArrayList.add("p");
 
 		passwordArrayList.add("pass12");
 		passwordArrayList.add("pass@123");
 		passwordArrayList.add("p");
+		passwordArrayList.add("j");
 	}
 
 	private void initialiseUIElements()
@@ -220,7 +217,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 					}
 					else
 					{
-						Toast.makeText(LoginScreenActivity.this,"Please Enter Correct Credentials",Toast.LENGTH_SHORT).show();
+						Toast.makeText(LoginScreenActivity.this,"Credentials invalid. Please check username and password, then try again.",Toast.LENGTH_SHORT).show();
 					}
 
 					//startActivity(new Intent(LoginScreenActivity.this, BaseActivity.class));
@@ -268,9 +265,9 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 			else
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(LoginScreenActivity.this);
-				builder.setTitle("Need Permissions");
-				builder.setMessage("This app needs all required permissions.Please provide all required permissions manually from settings.");
-				builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+				builder.setTitle("Permissions Required");
+				builder.setMessage("Please allow access to the microphone and Internet to ensure this applications works as designed. You can do this manually from the application's Settings.");
+				builder.setPositiveButton("Ok", new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(DialogInterface dialog, int which)
@@ -287,7 +284,7 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 						finish();
 					}
 				});
-				builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+				builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
 				{
 					@Override
 					public void onClick(DialogInterface dialog, int which)
@@ -341,8 +338,8 @@ public class LoginScreenActivity extends AppCompatActivity implements View.OnCli
 			if (!allGranted)
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(LoginScreenActivity.this);
-				builder.setTitle("Need Permissions");
-				builder.setMessage("This app needs all permissions to be provided.Please provide all required permissions.");
+				builder.setTitle("Permissions Required");
+				builder.setMessage("Please allow access to the microphone and Internet to ensure this applications works as designed. You can do this manually from the application's Settings.");
 				builder.setPositiveButton("Grant", new DialogInterface.OnClickListener()
 				{
 					@Override

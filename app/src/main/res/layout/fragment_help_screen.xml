@@ -9,5 +9,5 @@
         android:layout_height="wrap_content"
         android:textSize="25dp"
         android:layout_margin="10dp"
-        android:text="HelpScreen" />
+        android:text="This is where the help text and FAQs will end up." />
 </LinearLayout>

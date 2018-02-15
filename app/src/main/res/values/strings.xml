@@ -5,9 +5,9 @@
     <string name="remember_me">Remember Me</string>
     <string name="sign_in">SIGN IN</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="version_number">Version v1.3</string>
-    <string name="username_empty">Username Can Not Be Empty</string>
-    <string name="password_empty">Password Can Not Be Empty</string>
+    <string name="version_number">Version v1.8</string>
+    <string name="username_empty">Username field cannot be empty</string>
+    <string name="password_empty">Password field cannot be empty</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 
@@ -19,16 +19,16 @@
     <string name="logout">Logout</string>
 
 
-    <string name="app_info">To start recording press Record button, to stop recording press Stop button.</string>
-    <string name="choose_format_title">Choose Audio Format</string>
+    <string name="app_info">To start recording, press the \'Record\' button. To stop recording, press \'Stop.\'</string>
+    <string name="choose_format_title">Choose audio format</string>
     <string name="start_recording">Record</string>
     <string name="stop_recording">Stop</string>
     <string name="audio_format">Format</string>
-    <string name="user_type_msg">Please Select User Type</string>
+    <string name="user_type_msg">Please select either expert or regular user</string>
     <string name="expert_user">Expert User</string>
     <string name="normal_user">Normal User</string>
-    <string name="is_system_faulty">Is System Faulty</string>
-    <string name="change_user_type">Change User Type</string>
+    <string name="is_system_faulty">Engine misfiring?</string>
+    <string name="change_user_type">Change user type</string>
     <string name="privacy_policy_statement"><![CDATA[<p>CarKnow LLC (doing business as DataDriven) built the Data Driven Mechanic app as a free application to help us develop and demonstrate future applications, algorithms, and services. This SERVICE is provided by CarKnow LLC d.b.a DataDriven at no cost and is intended for use as is, with no warranties expressed or implied.
 <br/>This page is used to inform website visitors and mobile application users regarding our policies with the collection, use, and disclosure of Personal Information arising from the use of our service(s).
 <br/>If you choose to use our Service, then you agree to the collection and use of information in relation with this policy. The Personal Information that we collect are used for providing and improving the Service. We will not use or share your information with anyone outside our own company, except as described in this Privacy Policy.
@@ -69,16 +69,16 @@ We want to inform users of this Service that these third parties have access to 
 
 <br/><br/>This Service does not address anyone under the age of 13. We do not knowingly collect personal identifiable information from children under 13. In the case we discover that a child under 13 has provided us with personal information, we immediately delete this information from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us to ensure this information is removed.
 
+<br/><br/><br/><b>Restrictions</b>
+<br/><br/>Application users agree not to attempt to reverse engineer the mobile application, the processing server software, or any other related element of the data collection and analysis system.
+
 <br/><br/><br/><b>Changes to This Privacy Policy</b>
 
 <br/><br/>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. we will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately after they are posted on this page.
 
 <br/><br/><br/><b>Contact Us</b>
 
-<br/><br/>If you have any questions or suggestions about [my|our] Privacy Policy, do not hesitate to contact us at info@datadrivenapp.com or info@carknow.me.</p>]]></string>
+<br/><br/>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at info@datadrivenapp.com or info@carknow.me.</p>]]></string>
 
-    <string name="temp"><![CDATA[<p > <b><br> Hi!   </br>
-                <br> How are you  </br>
-               <br>I am fine </br> </b> </p>]]></string>
 </resources>
 

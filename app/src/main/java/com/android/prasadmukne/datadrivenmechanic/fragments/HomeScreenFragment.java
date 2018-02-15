@@ -316,7 +316,7 @@ public class HomeScreenFragment extends Fragment
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setCancelable(false);
 		progressDialog.setTitle("Processing");
-		progressDialog.setMessage("Please wait !!!");
+		progressDialog.setMessage("Please wait while audio features are generated and uploaded to the server. This may take a several minutes!");
 		progressDialog.show();
 	}
 

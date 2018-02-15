@@ -7,25 +7,12 @@ package com.android.prasadmukne.datadrivenmechanic.utils;
 public class AppConstants
 {
 
-    //public static final String FEATURE_DATA_SENDING_URL ="http://.:8080/DDMWebApplication/rest/upload/storeUser";
+    //public static final String FEATURE_DATA_SENDING_URL ="http://ec2-34-207-151-145.compute-1.amazonaws.com:8080/DDMWebApplication/rest/feature/saveFeature";
 
-    //public static final String FEATURE_DATA_SENDING_URL ="http://192.168.43.249:8081/DDMWebApplication/rest/feature/saveFeature";
+    //public static final String RAW_DATA_SENDING_URL ="http://ec2-34-207-151-145.compute-1.amazonaws.com:8080/DDMWebApplication/rest/rawdata/fileupload";
 
-    //public static final String RAW_DATA_SENDING_URL ="http://192.168.43.249:8081/DDMWebApplication/rest/rawdata/fileupload";
-
-	//public static final String FEATURE_DATA_SENDING_URL ="http://ec2-34-230-85-161.compute-1.amazonaws.com:8080/DDMWebApplication/rest/feature/saveFeature";
-
-
-	//public static final String RAW_DATA_SENDING_URL ="http://ec2-34-230-85-161.compute-1.amazonaws.com:8080/DDMWebApplication/rest/rawdata/fileupload";
-
-	//public static final String FEATURE_DATA_SENDING_URL ="http://192.168.43.68:8080/DDMWebApplication/rest/feature/saveFeature";
-
-	//public static final String RAW_DATA_SENDING_URL ="http://192.168.43.68:8080/DDMWebApplication/rest/rawdata/fileupload";
-
-	public static final String FEATURE_DATA_SENDING_URL ="http://ec2-34-207-151-145.compute-1.amazonaws.com:8080/DDMWebApplication/rest/feature/saveFeature";
-
-	public static final String RAW_DATA_SENDING_URL ="http://ec2-34-207-151-145.compute-1.amazonaws.com:8080/DDMWebApplication/rest/rawdata/fileupload";
-
+    public static final String FEATURE_DATA_SENDING_URL ="http://data.datadrivenapp.com:8080/DDMWebApplication/rest/feature/saveFeature";
+    public static final String RAW_DATA_SENDING_URL ="http://data.datadrivenapp.com:8080/DDMWebApplication/rest/rawdata/fileupload";
 
 	public static final String MPIN = "mpin";
 
@@ -69,6 +56,6 @@ public class AppConstants
 
 	public static final String SESSION_ID = "SESION_ID";
 
-	public static final String NO_INTERNET = "No Internet Available, Feature will be send automatically as soon as internet connection is restored.";
+	public static final String NO_INTERNET = "No Internet connection is available, your audio features will be sent as soon as connectivity is restored.";
 
 }
